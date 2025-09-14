@@ -1,0 +1,35 @@
+name: Deploy to GitHub Pages
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ghcr.io/astral-sh/uv:alpine
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: uv sync
+      - name: Configure Github Pages
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Build Site
+        run: uv run pelican --settings pelicanconf.py --extra-settings """ SITEURL='${{steps.pages.outputs.base_url}}'""" """FEED_DOMAIN='${{steps.pages.outputs.base_url}}'""" --output output/
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: output/
+  deploy:
+    concurrency:
+      group: 'pages'
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
