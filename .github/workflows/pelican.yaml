@@ -17,7 +17,8 @@ jobs:
       - name: Build Site
         run: |
           uv run pelican --settings pelicanconf.py \
-            --extra-settings """SITEURL='"${{steps.pages.outputs.base_url}}"'""" """FEED_DOMAIN='"${{steps.pages.outputs.base_url}}"'""" \
+            --extra-settings SITEURL='"${{steps.pages.outputs.base_url}}"' \
+            --extra-settings FEED_DOMAIN='"${{steps.pages.outputs.base_url}}"' \
             --output output/
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v3
