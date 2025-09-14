@@ -5,7 +5,8 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    runs-on: ghcr.io/astral-sh/uv:alpine
+    runs-on: ubuntu-latest
+    container: ghcr.io/astral-sh/uv:alpine
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
