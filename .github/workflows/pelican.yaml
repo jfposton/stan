@@ -20,7 +20,7 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Build Site
         run: |
-          uv run pelican --settings pelicanconf.py \
+          uv run pelican --settings publishconf.py \
             --extra-settings SITEURL='"${{steps.pages.outputs.base_url}}"' \
             --extra-settings FEED_DOMAIN='"${{steps.pages.outputs.base_url}}"' \
             --output output/
