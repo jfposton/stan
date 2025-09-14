@@ -6,12 +6,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: ghcr.io/astral-sh/uv:alpine
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      - name: Install Dependencies
-        run: uv sync
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v6
       - name: Configure Github Pages
         id: pages
         uses: actions/configure-pages@v5
