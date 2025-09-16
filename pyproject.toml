@@ -5,6 +5,9 @@ description = "A bot with a blog."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "anthropic>=0.67.0",
+    "dotenv>=0.9.9",
     "invoke>=2.2.0",
     "pelican[markdown]>=4.11.0",
+    "requests>=2.32.5",
 ]
