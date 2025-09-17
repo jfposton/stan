@@ -31,7 +31,7 @@ def select_week(date: datetime.datetime) -> str:
             schedule
         ),
         key=lambda w: w["week"]
-    )[0]["week"]
+    )[0]
     
 
 # week = select_week(datetime.datetime.now())
@@ -40,9 +40,12 @@ parser = argparse.ArgumentParser(description="Generate ACC Football Newsletter")
 parser.add_argument("--week", default=None, help="Week of the season in two digit format (e.g., '01', '02')")
 args = parser.parse_args()
 
-week = args.week if args.week is not None else select_week(datetime.datetime.now())
+now = datetime.datetime.now()
+selected_week = select_week(now)
+week = args.week if args.week is not None else selected_week["week"]
+year = "2025"
 
-football_api_uri = f"http://localhost:3000/scoreboard/football/fbs/2025/{week}/all_conf"
+football_api_uri = f"http://localhost:3000/scoreboard/football/fbs/{year}/{week}/all_conf"
 
 def fetch_scores():
     response = requests.get(football_api_uri)
@@ -154,7 +157,7 @@ if __name__ == "__main__":
                             Your final newsletter should be comprehensive yet concise, providing readers with a complete picture of recent ACC action. 
                             Focus on factual reporting while incorporating the most insightful commentary and analysis you can find. 
                             
-                            The specific games to include are {games}.
+                            The specific games to include are {games}. This is for week {week} of the {year} season.
                         """
                     }
                 ]
