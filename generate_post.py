@@ -6,28 +6,33 @@ import os
 import datetime
 import argparse
 
-def select_week(date: datetime.datetime) -> str:
-    schedule = [
-        {"week": "01", "start_date": "2025-08-18", "end_date": "2025-09-01"},
-        {"week": "02", "start_date": "2025-09-02", "end_date": "2025-09-07"},
-        {"week": "03", "start_date": "2025-09-08", "end_date": "2025-09-14"},
-        {"week": "04", "start_date": "2025-09-15", "end_date": "2025-09-21"},
-        {"week": "05", "start_date": "2025-09-22", "end_date": "2025-09-28"},
-        {"week": "06", "start_date": "2025-09-29", "end_date": "2025-10-05"},
-        {"week": "07", "start_date": "2025-10-06", "end_date": "2025-10-12"},
-        {"week": "08", "start_date": "2025-10-13", "end_date": "2025-10-19"},
-        {"week": "09", "start_date": "2025-10-20", "end_date": "2025-10-26"},
-        {"week": "10", "start_date": "2025-10-27", "end_date": "2025-11-02"},
-        {"week": "11", "start_date": "2025-11-03", "end_date": "2025-11-09"},
-        {"week": "12", "start_date": "2025-11-10", "end_date": "2025-11-16"},
-        {"week": "13", "start_date": "2025-11-17", "end_date": "2025-11-23"},
-        {"week": "14", "start_date": "2025-11-24", "end_date": "2025-11-30"},
-        {"week": "14", "start_date": "2025-12-01", "end_date": "2025-01-31"},
+def sorter(schedule_data: dict, date: datetime) -> bool:
+    start_date = datetime.datetime.strptime(schedule_data["start_date"], "%Y-%m-%d")
+    end_date = datetime.datetime.strptime(schedule_data["end_date"], "%Y-%m-%d")
+    end_date = end_date.replace(hour=23, minute=59, second=59, microsecond=999999)  # end of day
+    return start_date <= date <= end_date
 
-    ]
+schedule = [
+    {"week": "01", "start_date": "2025-08-18", "end_date": "2025-09-01"},
+    {"week": "02", "start_date": "2025-09-02", "end_date": "2025-09-07"},
+    {"week": "03", "start_date": "2025-09-08", "end_date": "2025-09-14"},
+    {"week": "04", "start_date": "2025-09-15", "end_date": "2025-09-21"},
+    {"week": "05", "start_date": "2025-09-22", "end_date": "2025-09-28"},
+    {"week": "06", "start_date": "2025-09-29", "end_date": "2025-10-05"},
+    {"week": "07", "start_date": "2025-10-06", "end_date": "2025-10-12"},
+    {"week": "08", "start_date": "2025-10-13", "end_date": "2025-10-19"},
+    {"week": "09", "start_date": "2025-10-20", "end_date": "2025-10-26"},
+    {"week": "10", "start_date": "2025-10-27", "end_date": "2025-11-02"},
+    {"week": "11", "start_date": "2025-11-03", "end_date": "2025-11-09"},
+    {"week": "12", "start_date": "2025-11-10", "end_date": "2025-11-16"},
+    {"week": "13", "start_date": "2025-11-17", "end_date": "2025-11-23"},
+    {"week": "14", "start_date": "2025-11-24", "end_date": "2025-11-30"},
+    {"week": "15", "start_date": "2025-12-01", "end_date": "2025-12-07"},
+]
+def select_week(date: datetime.datetime) -> str:
     return sorted(
         filter(
-            lambda w: datetime.datetime.strptime(w["start_date"], "%Y-%m-%d") <= date <= datetime.datetime.strptime(w["end_date"], "%Y-%m-%d"),
+            lambda w: sorter(w, date),
             schedule
         ),
         key=lambda w: w["week"]
@@ -41,10 +46,10 @@ parser.add_argument("--week", default=None, help="Week of the season in two digi
 args = parser.parse_args()
 
 now = datetime.datetime.now()
-selected_week = select_week(now)
-week = args.week if args.week is not None else selected_week["week"]
+week = args.week if args.week is not None else select_week(now)["week"]
 year = "2025"
 
+print(f"Generating newsletter for week {week} of the {year} season.")
 football_api_uri = f"http://localhost:3000/scoreboard/football/fbs/{year}/{week}/all_conf"
 
 def fetch_scores():
@@ -128,6 +133,7 @@ if __name__ == "__main__":
                             
                             Your newsletter should contain exactly three sections:
                             
+                            **Acc Football Newsletter - Week {week} Recap**
                             **Game Results Table**
                             Create a table with the following columns:
                             - Date
