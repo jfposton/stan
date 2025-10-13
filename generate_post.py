@@ -171,6 +171,59 @@ if __name__ == "__main__":
         ]
     )
 
+    initial_content = message.content[0].text
+    
+    # Second pass: fact-checking, proofreading, and editing
+    print("Running fact-check, proofreading, and editing pass...")
+    edit_message = client.messages.create(
+        model="claude-sonnet-4-20250514",
+        max_tokens=20000,
+        temperature=0.3,
+        system="You are an expert editor and fact-checker for sports journalism. Your task is to review, fact-check, proofread, and improve the provided ACC football newsletter.",
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": f"""
+                            Please review the following ACC football newsletter and improve it by:
+                            
+                            **Fact-Checking:**
+                            - Verify team names are spelled correctly and consistently
+                            - Check that scores and game details are accurate based on the provided data
+                            - Ensure conference affiliations are correct
+                            - Validate dates and venues when possible
+                            
+                            **Proofreading:**
+                            - Fix any grammatical errors
+                            - Correct spelling mistakes
+                            - Improve sentence structure and clarity
+                            - Ensure consistent formatting
+                            
+                            **Editorial Improvements:**
+                            - Enhance readability and flow
+                            - Improve transitions between sections
+                            - Make the writing more engaging while maintaining factual accuracy
+                            - Ensure the tone is professional yet accessible
+                            - Add any missing context that would help readers understand the significance of games
+                            
+                            **Original Game Data for Reference:**
+                            {games}
+                            
+                            **Newsletter to Review and Edit:**
+                            {initial_content}
+                            
+                            Please return the improved version of the newsletter with all corrections and enhancements applied. Maintain the same overall structure and format but improve the quality throughout.
+                        """
+                    }
+                ]
+            }
+        ]
+    )
+    
+    final_content = edit_message.content[0].text
+    
     now = datetime.datetime.now()
     with open(f"./content/{now.strftime('%Y')}week{week}.md", "w") as f:
         f.write(f"""Title: ACC Football Newsletter - {now.strftime('%Y')} Week {week}
@@ -178,5 +231,5 @@ Date: {now.strftime("%Y-%m-%d")}
 Category: Newsletter
 Tags: [ACC, Football, Newsletter]
 """)
-        f.write(message.content[0].text)
-    print(f"Newsletter written to {now.strftime('%Y')}week{week}.md")
+        f.write(final_content)
+    print(f"Newsletter written to {now.strftime('%Y')}week{week}.md (with fact-checking and editing)")
