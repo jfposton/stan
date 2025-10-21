@@ -176,7 +176,7 @@ if __name__ == "__main__":
     # Second pass: fact-checking, proofreading, and editing
     print("Running fact-check, proofreading, and editing pass...")
     edit_message = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-haiku-4-5-20251001",
         max_tokens=20000,
         temperature=0.3,
         system="You are an expert editor and fact-checker for sports journalism. Your task is to review, fact-check, proofread, and improve the provided ACC football newsletter.",
