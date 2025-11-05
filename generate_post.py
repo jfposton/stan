@@ -120,6 +120,7 @@ if __name__ == "__main__":
                             - "Past week" means the last 7 days from today's date
                             - Focus on both basketball and football games as appropriate for the current season
                             - DO NOT use any functions other than those provided to you
+                            - The ACC stopped having divisions in June of 2022
                             
                             **Step-by-Step Process:**
                             
