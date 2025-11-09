@@ -215,7 +215,7 @@ if __name__ == "__main__":
                             **Newsletter to Review and Edit:**
                             {initial_content}
                             
-                            Please return the improved version of the newsletter with all corrections and enhancements applied. Maintain the same overall structure and format but improve the quality throughout.
+                            Please return the improved version of the newsletter with all corrections and enhancements applied. Maintain the same overall structure and format but improve the quality throughout. DO NOT INCLUDE notes about the proofreading process or results. ONLY INCLUDE the post content itself. 
                         """
                     }
                 ]
